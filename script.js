@@ -149,10 +149,6 @@
     totalSpan.className = 'card-total';
     totalSpan.textContent = '\u20A6' + formatNaira(expTotal);
 
-    const chevron = document.createElement('span');
-    chevron.className = 'card-chevron';
-    chevron.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
-
     const delBtn = document.createElement('button');
     delBtn.className = 'card-del-btn';
     delBtn.setAttribute('aria-label', 'Delete ' + exp.name);
@@ -161,11 +157,10 @@
     header.appendChild(dot);
     header.appendChild(info);
     header.appendChild(totalSpan);
-    header.appendChild(chevron);
     header.appendChild(delBtn);
 
     const bodyWrap = document.createElement('div');
-    bodyWrap.className = 'card-body-wrap';
+    bodyWrap.className = 'card-body-wrap open';
 
     const body = document.createElement('div');
     body.className = 'card-body';
@@ -198,12 +193,33 @@
     addForm.className = 'add-item-form';
     addForm.dataset.expId = exp.id;
 
+    const fieldsRow = document.createElement('div');
+    fieldsRow.className = 'add-item-fields';
+
+    const nameField = document.createElement('div');
+    nameField.className = 'add-item-field';
+
+    const nameLabel = document.createElement('label');
+    nameLabel.className = 'add-item-label';
+    nameLabel.textContent = 'Item Name';
+
     const nameIn = document.createElement('input');
     nameIn.type = 'text';
     nameIn.className = 'item-name-input';
-    nameIn.placeholder = 'Item name';
+    nameIn.placeholder = 'e.g. Milk, Bread, Data';
     nameIn.autocomplete = 'off';
     nameIn.maxLength = '50';
+
+    nameField.appendChild(nameLabel);
+    nameField.appendChild(nameIn);
+    fieldsRow.appendChild(nameField);
+
+    const priceField = document.createElement('div');
+    priceField.className = 'add-item-field add-item-field--price';
+
+    const priceLabel = document.createElement('label');
+    priceLabel.className = 'add-item-label';
+    priceLabel.textContent = 'Price';
 
     const amtIn = document.createElement('input');
     amtIn.type = 'text';
@@ -212,14 +228,18 @@
     amtIn.inputMode = 'decimal';
     amtIn.autocomplete = 'off';
 
+    priceField.appendChild(priceLabel);
+    priceField.appendChild(amtIn);
+    fieldsRow.appendChild(priceField);
+
+    addForm.appendChild(fieldsRow);
+
     const addBtn = document.createElement('button');
     addBtn.type = 'submit';
     addBtn.className = 'btn-add-item';
     addBtn.setAttribute('aria-label', 'Add item');
-    addBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    addBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Item';
 
-    addForm.appendChild(nameIn);
-    addForm.appendChild(amtIn);
     addForm.appendChild(addBtn);
     body.appendChild(addForm);
 
@@ -230,11 +250,6 @@
     delBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       deleteExpense(exp.id);
-    });
-
-    header.addEventListener('click', (e) => {
-      if (e.target.closest('.card-del-btn')) return;
-      toggleExpand(exp.id);
     });
 
     addForm.addEventListener('submit', (e) => {
@@ -248,10 +263,6 @@
       nameIn.value = '';
       amtIn.value = '';
       nameIn.focus();
-      const ew = card.querySelector('.card-body-wrap');
-      if (!ew.classList.contains('open')) {
-        toggleExpand(exp.id);
-      }
     });
 
     amtIn.addEventListener('input', () => {
@@ -312,15 +323,6 @@
     });
 
     return row;
-  }
-
-  function toggleExpand(expId) {
-    const card = listEl.querySelector(`.expense-card[data-id="${expId}"]`);
-    if (!card) return;
-    const wrap = card.querySelector('.card-body-wrap');
-    const chevron = card.querySelector('.card-chevron');
-    wrap.classList.toggle('open');
-    chevron.classList.toggle('open');
   }
 
   function createExpense(name) {
