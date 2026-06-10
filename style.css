@@ -24,6 +24,11 @@
   --slate-700: #334155;
   --slate-800: #1e293b;
   --slate-900: #0f172a;
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-400: #fbbf24;
+  --amber-600: #d97706;
   --red-400: #f87171;
   --red-500: #ef4444;
   --red-600: #dc2626;
@@ -281,10 +286,16 @@ body {
   gap: 12px;
   padding: 14px 14px 14px 16px;
   transition: background 0.15s;
+  cursor: pointer;
+  user-select: none;
 }
 
 .card-header:hover {
   background: rgba(0,0,0,0.02);
+}
+
+.card-header.open {
+  background: rgba(0,0,0,0.03);
 }
 
 .card-dot {
@@ -355,8 +366,29 @@ body {
   height: 14px;
 }
 
+.card-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--slate-300);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.card-header.open .card-chevron {
+  transform: rotate(180deg);
+}
+
 /* ─── Card Body ─── */
 .card-body-wrap {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+  opacity: 0;
+}
+
+.card-body-wrap.open {
+  max-height: 1000px;
+  opacity: 1;
   overflow: visible;
 }
 
@@ -650,33 +682,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-700) 100%);
+  padding: 18px 20px;
+  background: var(--slate-50);
+  border: 1.5px solid var(--slate-200);
   border-radius: var(--radius);
-  color: #fff;
-  margin-top: 4px;
+  box-shadow: var(--shadow-sm);
+  margin-top: 8px;
 }
 
 .total-label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  opacity: 0.85;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.total-label svg {
+  stroke: var(--slate-400);
+}
+
 .total-amount {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
+  color: var(--slate-900);
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .total-amount .curr {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  opacity: 0.7;
+  color: var(--slate-400);
   margin-right: 3px;
 }
 
@@ -715,7 +756,7 @@ body {
   .app-header { padding: 22px 18px 20px; }
   .create-form { flex-direction: column; gap: 8px; }
   .create-form .btn-create { align-self: stretch; justify-content: center; height: 40px; }
-  .total-amount { font-size: 20px; }
+  .total-amount { font-size: 22px; }
   .add-item-fields { flex-direction: column; }
   .add-item-field--price { flex: 1; }
   .btn-add-item { align-self: stretch; justify-content: center; }

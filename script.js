@@ -145,6 +145,11 @@
     info.appendChild(nameSpan);
     info.appendChild(meta);
 
+    const chevron = document.createElement('span');
+    chevron.className = 'card-chevron';
+    chevron.setAttribute('aria-hidden', 'true');
+    chevron.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
     const totalSpan = document.createElement('span');
     totalSpan.className = 'card-total';
     totalSpan.textContent = '\u20A6' + formatNaira(expTotal);
@@ -156,11 +161,12 @@
 
     header.appendChild(dot);
     header.appendChild(info);
+    header.appendChild(chevron);
     header.appendChild(totalSpan);
     header.appendChild(delBtn);
 
     const bodyWrap = document.createElement('div');
-    bodyWrap.className = 'card-body-wrap open';
+    bodyWrap.className = 'card-body-wrap';
 
     const body = document.createElement('div');
     body.className = 'card-body';
@@ -250,6 +256,12 @@
     delBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       deleteExpense(exp.id);
+    });
+
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.card-del-btn, .card-total')) return;
+      header.classList.toggle('open');
+      bodyWrap.classList.toggle('open');
     });
 
     addForm.addEventListener('submit', (e) => {
